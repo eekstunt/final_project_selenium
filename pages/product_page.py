@@ -21,7 +21,13 @@ class ProductPage(BasePage):
         return self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text
 
     def check_added_product_name(self, product_name):
-        assert product_name == self.browser.find_element(*ProductPageLocators.ADDED_PRODUCT_NAME).text, "wrong product name"
+        assert product_name == self.browser.find_element(*ProductPageLocators.ADDED_PRODUCT_NAME).text, \
+            "wrong product name"
 
     def check_added_product_price(self, product_price):
-        assert format_number(product_price) == format_number(self.browser.find_element(*ProductPageLocators.ADDED_PRODUCT_PRICE).text), "wrong product price"
+        assert format_number(product_price) == format_number(self.browser.find_element(*ProductPageLocators.ADDED_PRODUCT_PRICE).text), \
+            "wrong product price"
+
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE), \
+            "Success message is presented, but should not be"

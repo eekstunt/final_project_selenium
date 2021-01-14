@@ -17,3 +17,4 @@ class LoginPage(BasePage):
     def should_be_register_form(self):
         assert self.browser.find_element(*LoginPageLocators.REGISTRATION_FROM), "Registration form is not presented"
 
+
