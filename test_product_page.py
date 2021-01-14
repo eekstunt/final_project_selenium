@@ -6,7 +6,6 @@ import time
 from .pages.locators import ProductPageLocators
 import pytest
 
-@pytest.mark.user_reg
 class TestUserAddToBasketFromProductPage():
     @pytest.fixture(scope="function", autouse=True)
     def setup(self, browser):
@@ -20,6 +19,7 @@ class TestUserAddToBasketFromProductPage():
         login_page.register_new_user(fake_email, fake_pswd)
         login_page.should_be_authorized_user()
 
+    @pytest.mark.need_review
     def test_user_can_add_product_to_basket(self, browser):
         link = 'http://selenium1py.pythonanywhere.com/ru/catalogue/the-shellcoders-handbook_209/'
         page = ProductPage(browser, link)
@@ -28,7 +28,6 @@ class TestUserAddToBasketFromProductPage():
         product_name = page.get_product_name()
         product_price = page.get_product_price()
         page.add_to_cart()
-        #page.solve_quiz_and_get_code()
         page.check_added_product_name(product_name)
         page.check_added_product_price(product_price)
 
@@ -38,7 +37,7 @@ class TestUserAddToBasketFromProductPage():
         page.open()
         assert page.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE)
 
-
+@pytest.mark.need_review
 @pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer1",
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer2",
@@ -60,6 +59,7 @@ def test_guest_can_add_product_to_basket(browser, link):
     page.check_added_product_name(product_name)
     page.check_added_product_price(product_price)
 
+@pytest.mark.need_review
 def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
     link = 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/'
     page = ProductPage(browser, link)
@@ -67,6 +67,7 @@ def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
     page.add_to_cart()
     assert page.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE)
 
+@pytest.mark.need_review
 def test_guest_cant_see_success_message(browser):
     link = 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/'
     page = ProductPage(browser, link)
