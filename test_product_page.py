@@ -1,9 +1,43 @@
 from .pages.product_page import ProductPage
 from .pages.basket_page import BasketPage
+from .pages.login_page import LoginPage
 from .pages.locators import BasketPageLocators
 import time
 from .pages.locators import ProductPageLocators
 import pytest
+
+@pytest.mark.user_reg
+class TestUserAddToBasketFromProductPage():
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/en-gb/accounts/login/"
+        login_page = LoginPage(browser, link)
+        login_page.open()
+
+        fake_email = str(time.time()) + "@fakemail.org"
+        fake_pswd = str(time.time()) + "fake_pswd"
+
+        login_page.register_new_user(fake_email, fake_pswd)
+        login_page.should_be_authorized_user()
+
+    def test_user_can_add_product_to_basket(self, browser):
+        link = 'http://selenium1py.pythonanywhere.com/ru/catalogue/the-shellcoders-handbook_209/'
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_be_add_to_basket_button()
+        product_name = page.get_product_name()
+        product_price = page.get_product_price()
+        page.add_to_cart()
+        #page.solve_quiz_and_get_code()
+        page.check_added_product_name(product_name)
+        page.check_added_product_price(product_price)
+
+    def test_user_cant_see_success_message(self, browser):
+        link = 'http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/'
+        page = ProductPage(browser, link)
+        page.open()
+        assert page.is_not_element_present(*ProductPageLocators.SUCCESS_MESSAGE)
+
 
 @pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer1",

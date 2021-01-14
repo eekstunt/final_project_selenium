@@ -47,6 +47,10 @@ class BasePage:
     def go_to_basket_from_header(self):
         self.browser.find_element(*BasePageLocators.BASKET_HEADER_BUTTON).click()
 
+    def should_be_authorized_user(self):
+        assert self.is_element_present(*BasePageLocators.USER_ICON), "User icon is not presented," \
+                                                                     " probably unauthorised user"
+
     def solve_quiz_and_get_code(self):
         alert = self.browser.switch_to.alert
         x = alert.text.split(" ")[2]
